@@ -125,6 +125,15 @@ module SSHKit
       end
     end
 
+    def test_ssh_command_with_only_a_hostname
+      host = Host.new('example.com')
+      assert_equal 'ssh example.com', host.ssh_command
+    end
+
+    def test_ssh_command_with_user_and_port
+      host = Host.new('someuser@example.com:2222')
+      assert_equal 'ssh -l someuser -p 2222 example.com', host.ssh_command
+    end
   end
 
 end

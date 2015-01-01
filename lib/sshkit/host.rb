@@ -80,6 +80,23 @@ module SSHKit
       .merge(ssh_options || {})
     end
 
+    def ssh_options_str
+      opts = {
+        '-l' => user,
+        '-p' => port
+      }
+      opts.delete_if {|k,v| v.nil? }
+      opts.to_a.flatten.join(' ')
+    end
+
+    def ssh_command
+      [
+        'ssh',
+        ssh_options_str,
+        hostname
+      ].reject(&:empty?).join(' ')
+    end
+
     def properties
       @properties ||= OpenStruct.new
     end
