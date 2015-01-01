@@ -7,6 +7,7 @@ require 'turn'
 require 'unindent'
 require 'stringio'
 require 'json'
+require 'net/ssh/proxy/command'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))

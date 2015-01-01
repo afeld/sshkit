@@ -134,6 +134,14 @@ module SSHKit
       host = Host.new('someuser@example.com:2222')
       assert_equal 'ssh -l someuser -p 2222 example.com', host.ssh_command
     end
+
+    def test_ssh_command_with_proxy
+      host = Host.new('someuser@example.com:2222')
+      host.ssh_options = {
+        proxy: Net::SSH::Proxy::Command.new('ssh mygateway.com -W %h:%p')
+      }
+      assert_equal 'ssh -l someuser -p 2222 -o "ProxyCommand ssh mygateway.com -W %h:%p" example.com', host.ssh_command
+    end
   end
 
 end
