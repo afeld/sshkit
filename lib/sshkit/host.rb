@@ -81,16 +81,13 @@ module SSHKit
     end
 
     def ssh_options_str
-      opts = {
-        '-l' => user,
-        '-p' => port
-      }
+      opts = []
+      opts << '-A' if netssh_options[:forward_agent]
+      opts << "-l #{user}" if user
       proxy = netssh_options[:proxy]
-      if proxy
-        opts['-o'] = "\"ProxyCommand #{proxy.command_line_template}\""
-      end
-      opts.delete_if {|k,v| v.nil? }
-      opts.to_a.flatten.join(' ')
+      opts << "-o \"ProxyCommand #{proxy.command_line_template}\"" if proxy
+      opts << "-p #{port}" if port
+      opts.join(' ')
     end
 
     def ssh_command

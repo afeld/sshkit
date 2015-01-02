@@ -127,12 +127,12 @@ module SSHKit
 
     def test_ssh_command_with_only_a_hostname
       host = Host.new('example.com')
-      assert_equal 'ssh example.com', host.ssh_command
+      assert_equal 'ssh -A example.com', host.ssh_command
     end
 
     def test_ssh_command_with_user_and_port
       host = Host.new('someuser@example.com:2222')
-      assert_equal 'ssh -l someuser -p 2222 example.com', host.ssh_command
+      assert_equal 'ssh -A -l someuser -p 2222 example.com', host.ssh_command
     end
 
     def test_ssh_command_with_proxy
@@ -140,7 +140,7 @@ module SSHKit
       host.ssh_options = {
         proxy: Net::SSH::Proxy::Command.new('ssh mygateway.com -W %h:%p')
       }
-      assert_equal 'ssh -l someuser -p 2222 -o "ProxyCommand ssh mygateway.com -W %h:%p" example.com', host.ssh_command
+      assert_equal 'ssh -A -l someuser -o "ProxyCommand ssh mygateway.com -W %h:%p" -p 2222 example.com', host.ssh_command
     end
   end
 
