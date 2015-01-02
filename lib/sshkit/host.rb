@@ -83,10 +83,15 @@ module SSHKit
     def ssh_options_str
       opts = []
       opts << '-A' if netssh_options[:forward_agent]
+      if netssh_options[:keys]
+        netssh_options[:keys].each do |k|
+          opts << "-i #{k}"
+        end
+      end
       opts << "-l #{user}" if user
-      proxy = netssh_options[:proxy]
-      opts << "-o \"ProxyCommand #{proxy.command_line_template}\"" if proxy
-      opts << "-p #{port}" if port
+      opts << %{-o "PreferredAuthentications #{netssh_options[:auth_methods].join(',')}"} if netssh_options[:auth_methods]
+      opts << %{-o "ProxyCommand #{netssh_options[:proxy].command_line_template}"} if netssh_options[:proxy]
+      opts << "-p #{netssh_options[:port]}" if netssh_options[:port]
       opts.join(' ')
     end
 

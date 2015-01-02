@@ -142,6 +142,21 @@ module SSHKit
       }
       assert_equal 'ssh -A -l someuser -o "ProxyCommand ssh mygateway.com -W %h:%p" -p 2222 example.com', host.ssh_command
     end
+
+    def test_ssh_command_when_extra_options_are_set
+      Host.new('someuser@example.com:2222').tap do |host|
+        host.password = "andthisdoesntevenmakeanysense"
+        host.keys     = ["~/.ssh/some_key_here"]
+        host.ssh_options = {
+          port: 3232,
+          keys: %w(/home/user/.ssh/id_rsa),
+          forward_agent: false,
+          auth_methods: %w(publickey password)
+        }
+        # TODO password?
+        assert_equal 'ssh -i /home/user/.ssh/id_rsa -l someuser -o "PreferredAuthentications publickey,password" -p 3232 example.com', host.ssh_command
+      end
+    end
   end
 
 end
